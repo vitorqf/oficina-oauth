@@ -9,7 +9,7 @@ import Image from "next/image";
 import styles from "./UserNavbar.module.scss";
 
 export function UserNavbar() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, signOut } = useAuth();
 
   return (
     <details className={styles["user-navbar"]}>
@@ -28,7 +28,7 @@ export function UserNavbar() {
           <Person sx={{ fontSize: 20 }} />
           Perfil
         </li>
-        <li>
+        <li onClick={signOut}>
           <ExitToApp sx={{ fontSize: 20 }} />
           Sair
         </li>

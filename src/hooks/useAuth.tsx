@@ -1,4 +1,4 @@
-import { getCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import React, { createContext, useEffect, useState } from "react";
 
@@ -7,6 +7,7 @@ type AuthContextType = {
   user: any;
   isLoading?: boolean;
   signIn: () => void;
+  signOut: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -14,6 +15,9 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   signIn: () => {
+    console.error("no AuthContext provided");
+  },
+  signOut: () => {
     console.error("no AuthContext provided");
   },
 });
@@ -31,6 +35,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     router.push(`/api/auth/signin?redirect_uri=${REDIRECT_URL}`);
   };
 
+  const signOut = () => {
+    deleteCookie("session");
+    setSession(null);
+    setUser(null);
+    router.reload();
+  };
+
   useEffect(() => {
     const cookieSession = getCookie("session");
     if (!cookieSession) return;
@@ -42,7 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ session, user, signIn, isLoading }}>
+    <AuthContext.Provider value={{ session, user, signIn, isLoading, signOut }}>
       {children}
     </AuthContext.Provider>
   );
