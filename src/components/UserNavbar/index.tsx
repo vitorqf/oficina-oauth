@@ -1,24 +1,38 @@
-import { KeyboardArrowDown, AccountCircle, ExitToApp, Person } from '@mui/icons-material';
-import styles from './UserNavbar.module.scss'
+import { useAuth } from "@/hooks/useAuth";
+import {
+  AccountCircle,
+  ExitToApp,
+  KeyboardArrowDown,
+  Person,
+} from "@mui/icons-material";
+import Image from "next/image";
+import styles from "./UserNavbar.module.scss";
 
 export function UserNavbar() {
-    return <details className={styles['user-navbar']}>
-        <summary>
-            <AccountCircle sx={{ fontSize: 32, color: '#0f6' }} />
-            <strong>Yasmin</strong>
-            <KeyboardArrowDown sx={{ fontSize: 18 }} />
-        </summary>
+  const { user, isLoading } = useAuth();
 
-        <ul>
-            <li>
-                <Person sx={{ fontSize: 20 }}/>
-                Perfil
-            </li>
-            <li>
-                <ExitToApp sx={{ fontSize: 20}}/> 
-                Sair
-            </li>
-        </ul>
+  return (
+    <details className={styles["user-navbar"]}>
+      <summary>
+        {!user || isLoading ? (
+          <AccountCircle sx={{ fontSize: 32, color: "#0f6" }} />
+        ) : (
+          <Image src={user.avatarUrl} alt={user.name} width={32} height={32} />
+        )}
+        <strong>{!user || isLoading ? "Usuário" : user.name}</strong>
+        <KeyboardArrowDown sx={{ fontSize: 18 }} />
+      </summary>
 
+      <ul>
+        <li>
+          <Person sx={{ fontSize: 20 }} />
+          Perfil
+        </li>
+        <li>
+          <ExitToApp sx={{ fontSize: 20 }} />
+          Sair
+        </li>
+      </ul>
     </details>
+  );
 }
